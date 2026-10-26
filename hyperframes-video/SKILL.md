@@ -24,7 +24,7 @@ description: 用 HyperFrames(HTML→MP4 逐帧渲染)制作中文讲解/科普�
 - 写新场景 → `references/scene-recipe.md`(含逐句字幕 JS 模板、标注动画模式)
 - 加配音 → `references/voice-pipeline.md`
 - 分析参考视频(抖音等)→ pitfalls.md 末节"参考视频定量拆解"
-- 找现成动效块/同赛道 skill/配音升级/剪映打通等外部工具 → `references/ecosystem.md`(开源生态清单,含官方 capture --video 1:1 复刻)
+- 找现成动效块/同赛道 skill/配音升级/剪映打通等外部工具 → `references/ecosystem.md`(347 仓生态全景、16-skill 同题实测、弱模型配方区、官方 capture --video 1:1 复刻)
 
 ## 自带脚本
 

@@ -31,6 +31,8 @@
 9. **Studio preview 与文件编辑竞态**:preview 进程存活时会回写文件(data-hf-id);批量改文件前 `npx hyperframes preview --stop`,改完再 `--background` 拉起(自动热重载)。
 10. **改时间轴后必跑 lint**:场景时长/host data-start 改动后 `clip_ends_past_root_duration` 会提示 root duration 与最后一个 host 结束时间不一致,同步改 index 的 `data-duration`。
 11. **snapshot 可用于渲染帧质心审计**(画面偏移/空白排查):帧 PNG + python 算非背景像素质心,正常应接近 (960, 500±150);偏到角落或亮像素 <0.5% 就是布局/动画 bug——配合本 skill 的 `scripts/frame_audit.py`。
+12. **转场中点必检**(hbg-douyin 教训):两场景交接处,前后场要共同铺满画布,中点定点抽帧看是否空白/黑闪;结论、数字类信息显式分阶段揭示,不要提前出现在画面上。
+13. **最终 MP4 才是交付物**(hbg-douyin 教训):编码后再抽帧复检,浏览器源帧/预览帧不算数。质检三件套:`ffmpeg blackdetect`(黑段)、`silencedetect`(静音段)、`loudnorm`/`ebur128`(响度);另对高风险时间点(转场/快切处)定点抽帧。
 
 ## 参考视频定量拆解方法论
 
