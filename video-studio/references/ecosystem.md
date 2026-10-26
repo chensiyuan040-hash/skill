@@ -22,7 +22,7 @@
 
 ## 同赛道中文讲解视频 skill
 
-- **hbg-douyin-code-explainer-video**(Mr-funny)—— 同 HyperFrames 底座、中文 9:16、确定性流水线,与本仓定位最接近的竞品;其音频原则与最终 MP4 质检法已吸收进本 skill(voice-pipeline.md 末节、pitfalls#12-13)
+- **hbg-douyin-code-explainer-video**(Mr-funny)—— 同 HyperFrames 底座、中文 9:16、确定性流水线,与本仓定位最接近的竞品;其音频原则与最终 MP4 质检法已吸收进本 skill(voice-pipeline.md 末节、hyperframes-pitfalls#12-13)
 - **dashi-animationstyle**(chuspeeism)—— 中文知识口播 → 7 种画风讲解动画,HTML/Canvas 逐帧
 - **ai-self-media-video-packaging-skill** —— Remotion 口播包装 + 线稿插画 + seek-safe 动效
 - **docvideoer** —— 文档 URL/MD → 中文旁白 Remotion 讲解片
@@ -75,7 +75,7 @@
 ## 方法论(产线共识)
 
 - **视觉自检迭代闭环**:生成 HTML → 渲染 → 抽帧视觉分析 → 提改进 → 再渲染。agent 做视频的标配循环,frame_audit.py + snapshot 是本机版
-- **最终 MP4 才算交付物**:质检从编码后的 MP4 抽帧,浏览器源帧/预览不算数(hbg 教训,见 pitfalls#13)
+- **最终 MP4 才算交付物**:质检从编码后的 MP4 抽帧,浏览器源帧/预览不算数(hbg 教训,见 hyperframes-pitfalls#13)
 - **按"职位"分工**:拆解编剧 → 生成运镜 → 确定性成片 → 配音字幕,不同阶段不同 skill,而非一个大 prompt 全包
 - **先锁叙事再调画面**:参考作者们(含抖音范本)的流程一致——写完代码才第一次看成片,人只当第一个观众
 

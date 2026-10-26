@@ -11,7 +11,7 @@ uv run --with edge-tts python scripts/gen_voice.py --project <hyperframes项目�
 - 推荐音色:zh-CN-YunxiNeural(年轻沉稳男)/ zh-CN-YunyangNeural(新闻播报)
 - 中文语速实测 ~5.1 字/s(Yunxi 默认);先按 5.1 字/s 估时长规划文案
 
-## 集成(关键坑见 pitfalls#6)
+## 集成(关键坑见 hyperframes-pitfalls#6)
 
 1. 音频 mp3 放 `assets/voice/scene-NN.mp3`(文件名保持稳定,重配音只换文件)
 2. **主 index.html 的 root div 内部**挂:`<audio id="vN" src="assets/voice/scene-NN.mp3" data-start="<场景起点+0.3>" data-duration="<实测时长>" data-volume="1.0" data-track-index="2"></audio>`

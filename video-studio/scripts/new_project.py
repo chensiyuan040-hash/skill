@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
-"""Scaffold a code-video project from the workspace template.
+"""Scaffold a code-video project from the skill-bundled template.
 
 Examples:
   python new_project.py my-film
   python new_project.py my-film --style 01-black-hud-meta --aspect 9:16 --duration 30
+  python new_project.py my-film --workspace ~/code/video
 """
 from __future__ import annotations
 
 import argparse
 import re
 import shutil
+import sys
 from pathlib import Path
 
-WORKSPACE = Path.home() / "code" / "video"
-TEMPLATE = WORKSPACE / "projects" / "_template"
+TEMPLATE = Path(__file__).resolve().parent.parent / "template"
+DEFAULT_WORKSPACE = Path.home() / "code" / "video"
 ASPECTS = {
     "16:9": (1920, 1080),
     "9:16": (1080, 1920),
@@ -36,19 +38,19 @@ def main() -> None:
     ap.add_argument("--style", default="01-black-hud-meta")
     ap.add_argument("--aspect", default="16:9", choices=sorted(ASPECTS))
     ap.add_argument("--duration", type=float, default=10.0)
+    ap.add_argument("--workspace", type=Path, default=DEFAULT_WORKSPACE,
+                    help=f"video workspace root (default {DEFAULT_WORKSPACE})")
     args = ap.parse_args()
 
     if not TEMPLATE.is_dir():
         raise SystemExit(f"Template not found: {TEMPLATE}")
 
     slug = slugify(args.name)
-    target = WORKSPACE / "projects" / slug
+    target = args.workspace / "projects" / slug
     if target.exists():
         raise SystemExit(f"Project already exists: {target}")
 
     shutil.copytree(TEMPLATE, target)
-    for sub in ("assets", "out", "stills"):
-        (target / sub).mkdir(exist_ok=True)
 
     width, height = ASPECTS[args.aspect]
     scale = width / 1920
@@ -57,6 +59,13 @@ def main() -> None:
         "{{STYLE}}": args.style,
         "{{ASPECT}}": args.aspect,
         "{{DURATION}}": f"{args.duration:g}",
+        "{{WIDTH}}": str(width),
+        "{{HEIGHT}}": str(height),
+        "{{FONT_XL}}": str(round(112 * scale)),
+        "{{FONT_L}}": str(round(34 * scale)),
+        "{{FONT_S}}": str(round(22 * scale)),
+        "{{TITLE_LINE_1}}": args.name,
+        "{{TITLE_LINE_2}}": "一句话主题",
     }
 
     for path in target.rglob("*"):
@@ -65,29 +74,17 @@ def main() -> None:
         text = path.read_text(encoding="utf-8")
         for key, value in replacements.items():
             text = text.replace(key, value)
-        if path.suffix.lower() == ".html":
-            text = text.replace("const DURATION = 10;", f"const DURATION = {args.duration:g};")
-            text = text.replace("width: 1920px; height: 1080px;",
-                                f"width: {width}px; height: {height}px;")
-            text = text.replace("walk * 1400", f"walk * {width - 380}")
-            text = text.replace("font-size: 112px", f"font-size: {round(112 * scale)}px")
-            text = text.replace("font-size: 34px", f"font-size: {round(34 * scale)}px")
-            text = text.replace("font-size: 22px", f"font-size: {round(22 * scale)}px")
-            text = text.replace("font-size: 26px", f"font-size: {round(26 * scale)}px")
-            text = text.replace("width: 120px; height: 120px;",
-                                f"width: {round(120 * scale)}px; height: {round(120 * scale)}px;")
         path.write_text(text, encoding="utf-8")
 
+    py = sys.executable or "python3"
+    render = Path(__file__).resolve().parent / "render_seek.py"
     print(f"Created {target}")
     print("Next:")
     print(f"  1. Fill {target / 'docs/BRIEF.md'} (see CHECKLIST.md)")
-    print(f"  2. Preview: ~/.venvs/video/bin/python "
-          f"~/.claude/skills/video-director/scripts/render_seek.py "
-          f"{target / 'src/film.html'} --preview 0,3,6,9 --out {target / 'stills'}")
-    print(f"  3. Draft:   ~/.venvs/video/bin/python "
-          f"~/.claude/skills/video-director/scripts/render_seek.py "
-          f"{target / 'src/film.html'} --duration {args.duration:g} --fps 30 "
-          f"--out {target / 'out/draft.mp4'}")
+    print(f"  2. Preview: {py} {render} {target / 'src/film.html'} "
+          f"--preview 0,3,6,9 --out {target / 'stills'}")
+    print(f"  3. Draft:   {py} {render} {target / 'src/film.html'} "
+          f"--duration {args.duration:g} --fps 30 --out {target / 'out/draft.mp4'}")
 
 
 if __name__ == "__main__":

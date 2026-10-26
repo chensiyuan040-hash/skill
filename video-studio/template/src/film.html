@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>{{NAME}}</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #0b0b0c; }
+  #stage {
+    position: relative; overflow: hidden;
+    width: {{WIDTH}}px; height: {{HEIGHT}}px;
+    background: #0b0b0c; color: #f2f2ef;
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  }
+  /* 风格 01 black-hud-meta 起手:近黑底 + 橙强调,换风格时整体替换配色与元素 */
+  .hud {
+    position: absolute; font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: {{FONT_S}}px; color: #6a6b64; letter-spacing: 0.08em;
+  }
+  .hud-author { left: 48px; bottom: 40px; }
+  .hud-frame { right: 48px; top: 40px; color: #ff6a2a; }
+  .title {
+    position: absolute; left: 96px; top: 38%;
+    font-size: {{FONT_XL}}px; font-weight: 700; line-height: 1.18;
+    color: #f2f2ef; opacity: 0; transform: translateY(24px);
+  }
+  .title .accent { color: #ff6a2a; }
+  .point {
+    position: absolute; left: 96px; font-size: {{FONT_L}}px;
+    color: #cfdfd4; opacity: 0; transform: translateX(-18px);
+  }
+  .point-1 { top: 56%; }
+  .point-2 { top: 64%; }
+  .point-3 { top: 72%; }
+  .ending {
+    position: absolute; left: 0; right: 0; top: 42%; text-align: center;
+    font-size: {{FONT_XL}}px; font-weight: 700; color: #ff6a2a; opacity: 0;
+  }
+  .bar {
+    position: absolute; left: 96px; top: 52%; width: 120px; height: 4px;
+    background: #ff6a2a; transform: scaleX(0); transform-origin: left;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="hud hud-author">{{NAME}}</div>
+  <div class="hud hud-frame" id="frame-counter">FRAME 0000</div>
+  <div class="title" id="t-title">{{TITLE_LINE_1}}<br><span class="accent">{{TITLE_LINE_2}}</span></div>
+  <div class="bar" id="t-bar"></div>
+  <div class="point point-1" id="t-p1">要点一:每 1-2 秒都有元素在动</div>
+  <div class="point point-2" id="t-p2">要点二:信息按理解顺序出现</div>
+  <div class="point point-3" id="t-p3">要点三:结尾必须有明确落版</div>
+  <div class="ending" id="t-end">THE END</div>
+</div>
+<script>
+  // seek(t) 渲染契约:页面是时间的纯函数,渲染器逐帧调用 window.seek(seconds)。
+  // 不用 CSS transition / 定时器 / 墙钟状态;所有元素状态由 t 唯一决定。
+  const DURATION = {{DURATION}};
+  const el = (id) => document.getElementById(id);
+  const ease = { // cubic ease-out
+    out: (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3),
+    in: (x) => Math.pow(Math.min(1, Math.max(0, x)), 3),
+  };
+  function phase(t, start, dur) { return ease.out((t - start) / dur); }
+
+  function set(id, o, tx, ty) {
+    const e = el(id);
+    e.style.opacity = o;
+    e.style.transform = "translate(" + (tx || 0) + "px," + (ty || 0) + "px)";
+  }
+
+  function seek(t) {
+    t = Math.min(DURATION, Math.max(0, t));
+    // 结构参考:0.5s 标题 → 2s 分隔条 → 3-6s 三条要点 → 末 15% 落版
+    set("t-title", phase(t, 0.5, 0.9), 0, 24 * (1 - phase(t, 0.5, 0.9)));
+    el("t-bar").style.transform = "scaleX(" + phase(t, 2.0, 0.7) + ")";
+    set("t-p1", phase(t, 3.0, 0.8), -18 * (1 - phase(t, 3.0, 0.8)), 0);
+    set("t-p2", phase(t, 4.0, 0.8), -18 * (1 - phase(t, 4.0, 0.8)), 0);
+    set("t-p3", phase(t, 5.0, 0.8), -18 * (1 - phase(t, 5.0, 0.8)), 0);
+    const endAt = DURATION * 0.85;
+    const eo = t >= endAt ? ease.out((t - endAt) / Math.max(0.6, DURATION * 0.1)) : 0;
+    el("t-end").style.opacity = eo;
+    el("t-end").style.letterSpacing = (0.02 + 0.06 * eo) + "em";
+    el("frame-counter").textContent =
+      "FRAME " + String(Math.round(t * 30)).padStart(4, "0");
+  }
+  window.seek = seek;
+  window.DURATION = DURATION;
+  window.ready = true;
+</script>
+</body>
+</html>

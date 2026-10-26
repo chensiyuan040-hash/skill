@@ -82,7 +82,7 @@ tl.to(rows[n], { backgroundColor: "rgba(217,164,65,0.14)", duration: 0.4, ease: 
 
 ## 真实截图接入
 
-`<img>` 本地路径(assets/screenshots/),容器 `object-fit:cover; object-position:top` + 固定高;图上可叠半透明标注浮层(背景 rgba(16,19,14,0.9))。采集方法见 pitfalls#3。
+`<img>` 本地路径(assets/screenshots/),容器 `object-fit:cover; object-position:top` + 固定高;图上可叠半透明标注浮层(背景 rgba(16,19,14,0.9))。采集方法见 hyperframes-pitfalls#3。
 
 ## 成片包装
 

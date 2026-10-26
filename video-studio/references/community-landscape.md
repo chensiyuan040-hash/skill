@@ -13,14 +13,15 @@
 
 ## 同仓库的 skill
 
-同仓库（当前未配置远程，发布时再定）里还有两个兄弟 skill。它们不是社区项目，选型时先分清边界：
+同仓库里还有一个兄弟 skill。它们不是社区项目，选型时先分清边界：
 
 | skill | 定位 | 怎么配合 |
 |---|---|---|
-| `hyperframes-video` | HyperFrames 中文讲解实战：本机安装、渲染流程与踩坑 | 互补。用到 HyperFrames 时先读它的 `SKILL.md` 与 `references/pitfalls.md`；它讲工具与本机坑，本 skill 讲导演、评审与交付 |
-| `ui-polish` | 前端 UI 质感规范 | 与视频流程无直接重叠；只有做封面页、发布页或网页包装时才参考 |
+| `ui-polish` | 前端 UI 质感规范 | 与视频流程无直接重叠；只有做封面页、发布页或网页包装时才参考。视频场景本身是 HTML/CSS，质感规则可直接复用 |
 
-本表不修改、也不依赖这两个 skill。
+注：原兄弟 skill `hyperframes-video` 与 `video-director-custom` 已于 2026-10-26 合并重构为本 skill（`video-studio`）——HyperFrames 坑在 `references/hyperframes-pitfalls.md`，导演流程在 `references/workflow.md`。
+
+本表不修改、也不依赖这个 skill。
 
 ## Tier S：吸收方法或试装
 
